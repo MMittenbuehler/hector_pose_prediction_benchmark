@@ -12,6 +12,8 @@ typedef std::unordered_map<std::string, double> JointPositionMap;
 
 class PosePredictionBenchmark {
 public:
+  typedef std::shared_ptr<PosePredictionBenchmark> Ptr;
+
   explicit PosePredictionBenchmark(hector_pose_prediction_interface::PosePredictor<double>::Ptr pose_predictor);
   void evaluate(const nav_msgs::Path& path, const std::vector<JointPositionMap>& joint_positions, bool init_from_previous=false);
   void evaluateFromBag(const std::string& bag_path, bool init_from_previous=false);
