@@ -10,15 +10,19 @@ PosePredictionBenchmark::PosePredictionBenchmark(
     hector_pose_prediction_interface::PosePredictor<double>::Ptr  pose_predictor)
 : pose_predictor_(std::move(pose_predictor)) {}
 
-void PosePredictionBenchmark::evaluate(const nav_msgs::Path& path)
+void PosePredictionBenchmark::evaluate(const nav_msgs::Path& path, const std::unordered_map<std::string, double>& joint_positions, bool init_from_previous)
 {
   data_.clear();
+  pose_predictor_->robotModel()->updateJointPositions(joint_positions);
+
+  bool first_iteration = true;
+  hector_math::Pose<double> previous_predicted_pose;
 
   for (const auto& pose_msg: path.poses) {
     DataPoint data_point;
     data_point.time = pose_msg.header.stamp;
     hector_math::Pose<double> pose = poseMsgToHectorMath(pose_msg.pose);
-    // TODO set joint state
+
     // Estimate stability from input pose
     if (pose_predictor_->estimateContactInformation(pose, data_point.estimated_support_polygon, data_point.estimated_contact_information)
         && !data_point.estimated_support_polygon.contact_hull_points.empty()) {
@@ -30,14 +34,25 @@ void PosePredictionBenchmark::evaluate(const nav_msgs::Path& path)
       data_point.estimated_stability = std::nan("");
     }
 
-
     // Erase pose information, that we want to estimate
-    pose.translation().z() = 0;
-    // TODO orientation
+    Eigen::Vector3d rpy = rotationToEulerAngles(pose.asTransform().linear());
+    if (!first_iteration && init_from_previous) {
+      Eigen::Vector3d previous_rpy = rotationToEulerAngles(previous_predicted_pose.asTransform().linear());
+      pose =  hector_math::Pose<double>(Eigen::AngleAxisd(rpy(2), Eigen::Vector3d::UnitZ())
+                                       * Eigen::AngleAxisd(previous_rpy(1), Eigen::Vector3d::UnitY())
+                                       * Eigen::AngleAxisd(previous_rpy(0), Eigen::Vector3d::UnitX()));
+      pose.translation().z() = previous_predicted_pose.translation().z();
+    } else {
+      pose = hector_math::Pose<double>(Eigen::AngleAxisd(rpy(2), Eigen::Vector3d::UnitZ()));
+      pose.translation().z() = 0; // arbitrary initialization
+    }
 
+    // Pose prediction
     data_point.input_pose = pose;
     data_point.predicted_stability = pose_predictor_->predictPoseAndContactInformation(pose, data_point.predicted_support_polygon, data_point.predicted_contact_information);
     data_point.predicted_pose = pose;
+    previous_predicted_pose = pose;
+    first_iteration = false;
     data_.push_back(std::move(data_point));
   }
 }
@@ -72,16 +87,25 @@ bool PosePredictionBenchmark::saveToCsv(const std::string& csv_file_path) const
     file << data_point.input_pose.translation().x() << ", ";
     file << data_point.input_pose.translation().y() << ", ";
     file << data_point.input_pose.translation().z() << ", ";
+    Eigen::Vector3d input_rpy = rotationToEulerAngles(data_point.input_pose.asTransform().linear());
+    file << input_rpy(0) << ", ";
+    file << input_rpy(1) << ", ";
+    file << input_rpy(2) << ", ";
     file << data_point.estimated_stability << ", ";
+
 
     file << data_point.predicted_pose.translation().x() << ", ";
     file << data_point.predicted_pose.translation().y() << ", ";
     file << data_point.predicted_pose.translation().z() << ", ";
+    Eigen::Vector3d prediction_rpy = rotationToEulerAngles(data_point.predicted_pose.asTransform().linear());
+    file << prediction_rpy(0) << ", ";
+    file << prediction_rpy(1) << ", ";
+    file << prediction_rpy(2) << ", ";
     file << data_point.predicted_stability << std::endl;
   }
 
   file.close();
-  return false;
+  return true;
 }
 
 }

@@ -11,6 +11,9 @@ hector_math::Pose<double> poseMsgToHectorMath(const geometry_msgs::Pose& pose_ms
 
 bool createParentDirectory(const std::string& file_path);
 
+
+Eigen::Vector3d rotationToEulerAngles(const Eigen::Matrix3d &rot);
+
 }
 
 #endif  // HECTOR_POSE_PREDICTION_BENCHMARK_TOOLS_UTIL_H

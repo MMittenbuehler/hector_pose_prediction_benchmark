@@ -26,5 +26,19 @@ bool createParentDirectory(const std::string& file_path) {
   return true;
 }
 
+Eigen::Vector3d rotationToEulerAngles(const Eigen::Matrix3d &rot) {
+  double epsilon = 1e-12;
+  double roll, pitch, yaw;
+  pitch = std::atan2(-rot.data()[2], sqrt(rot.data()[0]*rot.data()[0] + rot.data()[1]*rot.data()[1]));
+  if (std::abs(pitch) > (M_PI_2-epsilon)) {
+    yaw = std::atan2(-rot.data()[3], rot.data()[4]);
+    roll = 0.0;
+  } else {
+    roll = std::atan2(rot.data()[5], rot.data()[8]);
+    yaw = std::atan2(rot.data()[1], rot.data()[0]);
+  }
+  return {roll, pitch, yaw};
+}
+
 }
 
