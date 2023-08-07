@@ -1,0 +1,12 @@
+#ifndef HECTOR_POSE_PREDICTION_BENCHMARK_BENCHMARK_SUITE_H
+#define HECTOR_POSE_PREDICTION_BENCHMARK_BENCHMARK_SUITE_H
+
+namespace hector_pose_prediction_benchmark {
+
+class BenchmarkSuite
+{
+};
+
+}
+
+#endif  // HECTOR_POSE_PREDICTION_BENCHMARK_BENCHMARK_SUITE_H
