@@ -6,6 +6,9 @@ add_compile_options(-std=c++17)
 find_package(catkin REQUIRED COMPONENTS
   hector_pose_prediction_benchmark_tools
   roscpp
+  sdf_contact_estimation
+  hector_heightmap_pose_prediction
+  hector_world_heightmap
 )
 
 
@@ -15,7 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS hector_pose_prediction_benchmark_tools roscpp
+  CATKIN_DEPENDS hector_pose_prediction_benchmark_tools roscpp sdf_contact_estimation hector_heightmap_pose_prediction hector_world_heightmap
 #  DEPENDS system_lib
 )
 
@@ -30,10 +33,12 @@ include_directories(
 
 set(HEADERS
   include/${PROJECT_NAME}/benchmark_suite.h
+  include/${PROJECT_NAME}/pose_predictor_factory.h
 )
 
 set(SOURCES
   src/benchmark_suite.cpp
+  src/pose_predictor_factory.cpp
 )
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
