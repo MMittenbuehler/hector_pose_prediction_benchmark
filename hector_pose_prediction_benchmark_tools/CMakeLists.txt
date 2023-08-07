@@ -8,6 +8,10 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   hector_stability_metrics
   geometry_msgs
+  tf2_msgs
+  sensor_msgs
+  rosbag
+  eigen_conversions
 )
 
 
@@ -17,7 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES hector_pose_prediction_benchmark_tools
- CATKIN_DEPENDS hector_pose_prediction_interface nav_msgs hector_stability_metrics geometry_msgs
+ CATKIN_DEPENDS hector_pose_prediction_interface nav_msgs hector_stability_metrics geometry_msgs tf2_msgs sensor_msgs rosbag eigen_conversions
 #  DEPENDS system_lib
 )
 

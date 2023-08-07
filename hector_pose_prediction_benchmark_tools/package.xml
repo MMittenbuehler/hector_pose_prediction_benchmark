@@ -16,6 +16,10 @@
   <depend>hector_stability_metrics</depend>
   <depend>nav_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>tf2_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>eigen_conversions</depend>
+  <depend>rosbag</depend>
 
   <export>
   </export>

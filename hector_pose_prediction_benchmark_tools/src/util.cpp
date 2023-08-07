@@ -1,6 +1,7 @@
 #include <hector_pose_prediction_benchmark_tools/util.h>
 
 #include <ros/console.h>
+#include <eigen_conversions/eigen_msg.h>
 
 namespace hector_pose_prediction_benchmark_tools {
 
@@ -38,6 +39,52 @@ Eigen::Vector3d rotationToEulerAngles(const Eigen::Matrix3d &rot) {
     yaw = std::atan2(rot.data()[1], rot.data()[0]);
   }
   return {roll, pitch, yaw};
+}
+
+void updateJointPositionMap(const sensor_msgs::JointStateConstPtr& joint_state_msg,
+                         std::unordered_map<std::string, double>& joint_state_map,
+                         std::set<std::string>& missing_joint_states)
+{
+  if (joint_state_msg) {
+    // Mark seen joints
+    if (!missing_joint_states.empty()) {
+      for (const auto & joint_name : joint_state_msg->name) {
+        auto it = missing_joint_states.find(joint_name);
+        if (it != missing_joint_states.end()) {
+          missing_joint_states.erase(it);
+        }
+      }
+    }
+    // Update state
+    for (unsigned int i = 0; i < joint_state_msg->name.size(); ++i) {
+      joint_state_map[joint_state_msg->name[i]] = joint_state_msg->position[i];
+    }
+  }
+}
+
+bool addPoseToPath(const geometry_msgs::TransformStamped& transform_msg, nav_msgs::Path& path, double sampling_distance) {
+  Eigen::Isometry3d pose;
+  tf::transformMsgToEigen(transform_msg.transform, pose);
+
+  bool add_pose = false;
+  if (path.poses.empty()) {
+    add_pose = true;
+  } else {
+    Eigen::Vector3d previous_point;
+    tf::pointMsgToEigen(path.poses.back().pose.position, previous_point);
+    double distance = (previous_point - pose.translation()).norm();
+    if (distance > sampling_distance) {
+      add_pose = true;
+    }
+  }
+
+  if (add_pose) {
+    geometry_msgs::PoseStamped pose_msg;
+    pose_msg.header = transform_msg.header;
+    tf::poseEigenToMsg(pose, pose_msg.pose);
+    path.poses.push_back(std::move(pose_msg));
+  }
+  return add_pose;
 }
 
 }
