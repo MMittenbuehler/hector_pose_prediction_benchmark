@@ -13,7 +13,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>hector_pose_prediction_interface</depend>
+  <depend>hector_stability_metrics</depend>
   <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
 
   <export>
   </export>

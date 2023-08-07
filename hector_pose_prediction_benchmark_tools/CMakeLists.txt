@@ -6,6 +6,8 @@ add_compile_options(-std=c++17)
 find_package(catkin REQUIRED COMPONENTS
   hector_pose_prediction_interface
   nav_msgs
+  hector_stability_metrics
+  geometry_msgs
 )
 
 
@@ -15,7 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES hector_pose_prediction_benchmark_tools
- CATKIN_DEPENDS hector_pose_prediction_interface nav_msgs
+ CATKIN_DEPENDS hector_pose_prediction_interface nav_msgs hector_stability_metrics geometry_msgs
 #  DEPENDS system_lib
 )
 
