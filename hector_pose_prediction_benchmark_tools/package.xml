@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>hector_pose_prediction_benchmark_tools</name>
+  <version>0.0.0</version>
+  <description>The hector_pose_prediction_benchmark_tools package</description>
+
+  <maintainer email="oehler@sim.tu-darmstadt.de">Martin Oehler</maintainer>
+
+  <license>MIT</license>
+
+
+  <author email="oehler@sim.tu-darmstadt.de">Martin Oehler</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>hector_pose_prediction_interface</depend>
+
+  <export>
+  </export>
+</package>
