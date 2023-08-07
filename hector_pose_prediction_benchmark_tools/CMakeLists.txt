@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(hector_pose_prediction_benchmark_tools)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
   hector_pose_prediction_interface
+  nav_msgs
 )
 
 
@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES hector_pose_prediction_benchmark_tools
- CATKIN_DEPENDS hector_pose_prediction_interface
+ CATKIN_DEPENDS hector_pose_prediction_interface nav_msgs
 #  DEPENDS system_lib
 )
 
@@ -29,10 +29,14 @@ include_directories(
 
 set(HEADERS
   include/${PROJECT_NAME}/pose_prediction_benchmark.h
+  include/${PROJECT_NAME}/data_point.h
+  include/${PROJECT_NAME}/util.h
 )
 
 set(SOURCES
   src/pose_prediction_benchmark.cpp
+  src/data_point.cpp
+  src/util.cpp
 )
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
