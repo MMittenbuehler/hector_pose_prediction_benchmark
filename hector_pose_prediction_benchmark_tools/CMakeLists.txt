@@ -37,12 +37,14 @@ set(HEADERS
   include/${PROJECT_NAME}/pose_prediction_benchmark.h
   include/${PROJECT_NAME}/data_point.h
   include/${PROJECT_NAME}/util.h
-)
+  include/${PROJECT_NAME}/bag_reader.h
+  include/${PROJECT_NAME}/types.h)
 
 set(SOURCES
   src/pose_prediction_benchmark.cpp
   src/data_point.cpp
   src/util.cpp
+  src/bag_reader.cpp
 )
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})

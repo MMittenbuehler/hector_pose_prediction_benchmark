@@ -1,10 +1,10 @@
 #include <hector_pose_prediction_benchmark_tools/pose_prediction_benchmark.h>
 
 #include <hector_pose_prediction_benchmark_tools/util.h>
+#include <hector_pose_prediction_benchmark_tools/bag_reader.h>
 #include <hector_stability_metrics/metrics/force_angle_stability_measure.h>
 #include <ros/console.h>
-#include <rosbag/bag.h>
-#include <rosbag/view.h>
+
 #include <sensor_msgs/JointState.h>
 #include <tf2_msgs/TFMessage.h>
 #include <fstream>
@@ -119,39 +119,11 @@ bool PosePredictionBenchmark::saveToCsv(const std::string& csv_file_path) const
 }
 void PosePredictionBenchmark::evaluateFromBag(const std::string& bag_path, bool init_from_previous)
 {
-  rosbag::Bag bag;
-  try {
-    bag.open(bag_path, rosbag::bagmode::Read);
-  } catch (const rosbag::BagException& e) {
-    ROS_ERROR_STREAM(e.what());
-    return;
-  }
+  BagReader reader(bag_path, pose_predictor_->robotModel()->jointNames());
 
-  std::vector<std::string> topics{"/tf", "/joint_states"};
-  rosbag::View view(bag, rosbag::TopicQuery(topics));
-  std::unordered_map<std::string, double> joint_position_map;
-  std::set<std::string> missing_joint_states(pose_predictor_->robotModel()->jointNames().begin(),
-                                             pose_predictor_->robotModel()->jointNames().end());
-  nav_msgs::Path path;
-  path.header.frame_id = "world";
   std::vector<JointPositionMap> joint_positions;
-  for(const rosbag::MessageInstance& m: view) {
-    sensor_msgs::JointState::ConstPtr joint_state_msg = m.instantiate<sensor_msgs::JointState>();
-    updateJointPositionMap(joint_state_msg, joint_position_map, missing_joint_states);
-
-    tf2_msgs::TFMessage::ConstPtr tf_msg = m.instantiate<tf2_msgs::TFMessage>();
-    if (missing_joint_states.empty() && tf_msg) {
-      for (const auto& transform_msg: tf_msg->transforms) {
-        if (transform_msg.child_frame_id != "base_link" || transform_msg.header.frame_id != path.header.frame_id) {
-          continue;
-        }
-        if (addPoseToPath(transform_msg, path, 0.05)) {
-          joint_positions.push_back(joint_position_map);
-        }
-      }
-    }
-  }
-  bag.close();
+  nav_msgs::Path path;
+  reader.parse(path,joint_positions);
 
   evaluate(path, joint_positions, init_from_previous);
 }

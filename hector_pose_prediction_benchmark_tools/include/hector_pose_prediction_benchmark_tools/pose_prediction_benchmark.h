@@ -5,10 +5,9 @@
 #include <nav_msgs/Path.h>
 
 #include <hector_pose_prediction_benchmark_tools/data_point.h>
+#include <hector_pose_prediction_benchmark_tools/types.h>
 
 namespace hector_pose_prediction_benchmark_tools {
-
-typedef std::unordered_map<std::string, double> JointPositionMap;
 
 class PosePredictionBenchmark {
 public:
