@@ -46,6 +46,8 @@ bool BagReader::parse(nav_msgs::Path& path, std::vector<JointPositionMap>& joint
       if (addPoseToPath(transform_msg, path, 0.05)) {
         joint_positions.push_back(joint_position_map);
       }
+    } else {
+      ROS_WARN_STREAM("Missing joint states: " << setToString(missing_joint_states));
     }
   }
   bag.close();
@@ -58,6 +60,8 @@ void BagReader::updateTfBuffer(const rosbag::MessageInstance& msg)
   if (tf_msg) {
     bool is_static = msg.getTopic() == "/tf_static";
     for (const auto& transform_msg: tf_msg->transforms) {
+      ROS_DEBUG_STREAM("Added transform " << transform_msg.header.frame_id << " -> " << transform_msg.child_frame_id << " at time "
+                      << (is_static ? "static" : std::to_string(transform_msg.header.stamp.toSec())));
       tf_buffer_.setTransform(transform_msg, "BagReader", is_static);
     }
   }

@@ -82,6 +82,10 @@ bool addPoseToPath(const geometry_msgs::TransformStamped& transform_msg, nav_msg
     geometry_msgs::PoseStamped pose_msg;
     pose_msg.header = transform_msg.header;
     tf::poseEigenToMsg(pose, pose_msg.pose);
+    ROS_INFO_STREAM("Adding pose [" <<
+                    pose_msg.pose.position.x << ", " <<
+                    pose_msg.pose.position.y << ", " <<
+                    pose_msg.pose.position.z << "].");
     path.poses.push_back(std::move(pose_msg));
   }
   return add_pose;

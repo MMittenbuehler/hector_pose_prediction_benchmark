@@ -11,6 +11,17 @@
 
 namespace hector_pose_prediction_benchmark_tools {
 
+template <typename T>
+std::string setToString(const std::set<T>& set) {
+  std::stringstream ss;
+  ss << "[";
+  for (auto entry: set) {
+    ss << entry << ",";
+  }
+  ss << "]";
+  return ss.str();
+}
+
 hector_math::Pose<double> poseMsgToHectorMath(const geometry_msgs::Pose& pose_msg);
 
 bool createParentDirectory(const std::string& file_path);

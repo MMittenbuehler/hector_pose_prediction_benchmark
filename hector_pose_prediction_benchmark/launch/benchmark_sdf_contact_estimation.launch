@@ -4,9 +4,9 @@
 
   <!-- Load robot description -->
   <param name="robot_description" command="$(find xacro)/xacro $(find asterix_description)/urdf/asterix_ugv.urdf.xacro" />
+  <param name="robot_description_semantic" textfile="$(find asterix_moveit_config)/config/asterix_ugv.srdf" />
 
   <node pkg="hector_pose_prediction_benchmark" type="benchmark_node" name="pose_prediction_benchmark" output="screen" clear_params="true" ><!--launch-prefix="gdb -args"-->
-
     <param name="pose_predictor" value="sdf_contact_estimation"/>
     <param name="bag_file_path" value="$(arg bag_path)"/>
     <param name="result_folder" value="$(find hector_pose_prediction_benchmark)/data"/>

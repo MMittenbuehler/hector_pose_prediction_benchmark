@@ -6,12 +6,16 @@ BenchmarkSuite::BenchmarkSuite(const ros::NodeHandle& nh, const ros::NodeHandle&
 : nh_(nh), pnh_(pnh)
 {
   loadParameters(pnh_);
+  ROS_INFO_STREAM("Initializing pose predictor " << pose_predictor_name_);
   pose_predictor_ = createPosePredictor(pose_predictor_name_, pnh_);
   benchmark_ = std::make_shared<hector_pose_prediction_benchmark_tools::PosePredictionBenchmark>(pose_predictor_);
+  ROS_INFO_STREAM("Initialization finished");
+
 }
 
 void BenchmarkSuite::runBenchmark()
 {
+  ROS_INFO_STREAM("Starting benchmark from bag at " << bag_file_path_);
   benchmark_->evaluateFromBag(bag_file_path_, false);
 
   if (!result_folder_.empty()) {
