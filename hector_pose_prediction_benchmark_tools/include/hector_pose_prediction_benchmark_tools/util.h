@@ -7,7 +7,11 @@
 #include <sensor_msgs/JointState.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <nav_msgs/Path.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <filesystem>
+#include <ros/publisher.h>
+
+#include <hector_pose_prediction_benchmark_tools/types.h>
 
 namespace hector_pose_prediction_benchmark_tools {
 
@@ -33,6 +37,9 @@ void updateJointPositionMap(const sensor_msgs::JointStateConstPtr& joint_state_m
                          std::set<std::string>& missing_joint_states);
 
 bool addPoseToPath(const geometry_msgs::TransformStamped& transform_msg, nav_msgs::Path& path, double sampling_distance);
+
+void fixMarkerIds(visualization_msgs::MarkerArray& array);
+
 }
 
 #endif  // HECTOR_POSE_PREDICTION_BENCHMARK_TOOLS_UTIL_H

@@ -17,11 +17,15 @@ public:
   explicit BagReader(std::string bag_path, std::vector<std::string> joint_names);
   bool parse(nav_msgs::Path& path, std::vector<JointPositionMap>& joint_positions);
 
+  double getPathSamplingResolution() const;
+  void setPathSamplingResolution(double resolution);
 private:
   void updateTfBuffer(const rosbag::MessageInstance& msg);
+
   tf2_ros::Buffer tf_buffer_;
   std::string bag_path_;
   std::vector<std::string> joint_names_;
+  double path_sampling_resolution_;
 };
 
 }

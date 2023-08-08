@@ -10,11 +10,13 @@ namespace hector_pose_prediction_benchmark_tools {
 struct DataPoint
 {
   ros::Time time;
-  hector_math::Pose<double> input_pose;
+
+  hector_math::Pose<double> gt_pose;
   hector_pose_prediction_interface::SupportPolygon<double> estimated_support_polygon;
   hector_pose_prediction_interface::ContactInformation<double> estimated_contact_information;
   double estimated_stability; // Stability estimated from input_pose
 
+  hector_math::Pose<double> input_pose;
   hector_math::Pose<double> predicted_pose;
   double predicted_stability;
   hector_pose_prediction_interface::SupportPolygon<double> predicted_support_polygon;

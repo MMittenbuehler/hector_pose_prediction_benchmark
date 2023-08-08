@@ -29,6 +29,8 @@ private:
   std::string pose_predictor_name_;
   std::string bag_file_path_;
   std::string result_folder_;
+  double path_sampling_resolution_;
+  double wait_time_;
 };
 
 }

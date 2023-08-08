@@ -91,5 +91,11 @@ bool addPoseToPath(const geometry_msgs::TransformStamped& transform_msg, nav_msg
   return add_pose;
 }
 
+void fixMarkerIds(visualization_msgs::MarkerArray& array) {
+  for (int i = 0; i < array.markers.size(); ++i) {
+    array.markers[i].id = i;
+  }
+}
+
 }
 

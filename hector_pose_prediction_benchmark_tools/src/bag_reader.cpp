@@ -6,7 +6,7 @@
 namespace hector_pose_prediction_benchmark_tools {
 
 BagReader::BagReader(std::string bag_path, std::vector<std::string> joint_names)
-: bag_path_(std::move(bag_path)), joint_names_(std::move(joint_names)) {}
+: bag_path_(std::move(bag_path)), joint_names_(std::move(joint_names)), path_sampling_resolution_(0.05) {}
 
 bool BagReader::parse(nav_msgs::Path& path, std::vector<JointPositionMap>& joint_positions)
 {
@@ -43,7 +43,7 @@ bool BagReader::parse(nav_msgs::Path& path, std::vector<JointPositionMap>& joint
         ROS_WARN("%s",ex.what());
         continue;
       }
-      if (addPoseToPath(transform_msg, path, 0.05)) {
+      if (addPoseToPath(transform_msg, path, path_sampling_resolution_)) {
         joint_positions.push_back(joint_position_map);
       }
     } else {
@@ -65,6 +65,14 @@ void BagReader::updateTfBuffer(const rosbag::MessageInstance& msg)
       tf_buffer_.setTransform(transform_msg, "BagReader", is_static);
     }
   }
+}
+double BagReader::getPathSamplingResolution() const
+{
+  return path_sampling_resolution_;
+}
+void BagReader::setPathSamplingResolution(double resolution)
+{
+  path_sampling_resolution_ = resolution;
 }
 
 }
