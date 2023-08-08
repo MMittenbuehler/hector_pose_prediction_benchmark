@@ -106,40 +106,18 @@ bool PosePredictionBenchmark::saveToCsv(const std::string& csv_file_path) const
   file.open(csv_file_path);
 
   file << "time,"
-       << "input_position_x,"
-       << "input_position_y,"
-       << "input_position_z,"
-       << "input_orientation_roll,"
-       << "input_orientation_pitch,"
-       << "input_orientation_yaw,"
+       << getPoseLabels("ground_truth")
+       << getPoseLabels("input")
        << "estimated_stability,"
-       << "predicted_position_x,"
-       << "predicted_position_y,"
-       << "predicted_position_z,"
-       << "predicted_orientation_roll,"
-       << "predicted_orientation_pitch,"
-       << "predicted_orientation_yaw,"
+       << getPoseLabels("predicted")
        << "predicted_stability"
        << std::endl;
   for (const auto& data_point: data_) {
     file << data_point.time.toSec() << ", ";
-    file << data_point.input_pose.translation().x() << ", ";
-    file << data_point.input_pose.translation().y() << ", ";
-    file << data_point.input_pose.translation().z() << ", ";
-    Eigen::Vector3d input_rpy = rotationToEulerAngles(data_point.input_pose.asTransform().linear());
-    file << input_rpy(0) << ", ";
-    file << input_rpy(1) << ", ";
-    file << input_rpy(2) << ", ";
+    file << poseToText(data_point.gt_pose) << ", ";
+    file << poseToText(data_point.input_pose) << ", ";
     file << data_point.estimated_stability << ", ";
-
-
-    file << data_point.predicted_pose.translation().x() << ", ";
-    file << data_point.predicted_pose.translation().y() << ", ";
-    file << data_point.predicted_pose.translation().z() << ", ";
-    Eigen::Vector3d prediction_rpy = rotationToEulerAngles(data_point.predicted_pose.asTransform().linear());
-    file << prediction_rpy(0) << ", ";
-    file << prediction_rpy(1) << ", ";
-    file << prediction_rpy(2) << ", ";
+    file << poseToText(data_point.predicted_pose) << ", ";
     file << data_point.predicted_stability << std::endl;
   }
 

@@ -40,6 +40,10 @@ bool addPoseToPath(const geometry_msgs::TransformStamped& transform_msg, nav_msg
 
 void fixMarkerIds(visualization_msgs::MarkerArray& array);
 
+std::string poseToText(const hector_math::Pose<double>& pose);
+
+std::string getPoseLabels(const std::string& pose_name);
+
 }
 
 #endif  // HECTOR_POSE_PREDICTION_BENCHMARK_TOOLS_UTIL_H

@@ -97,5 +97,28 @@ void fixMarkerIds(visualization_msgs::MarkerArray& array) {
   }
 }
 
+std::string poseToText(const hector_math::Pose<double>& pose) {
+  std::stringstream ss;
+  ss << pose.translation().x() << ", ";
+  ss << pose.translation().y() << ", ";
+  ss << pose.translation().z() << ", ";
+  Eigen::Vector3d input_rpy = rotationToEulerAngles(pose.asTransform().linear());
+  ss << input_rpy(0) << ", ";
+  ss << input_rpy(1) << ", ";
+  ss << input_rpy(2) ;
+  return ss.str();
+}
+
+std::string getPoseLabels(const std::string& pose_name) {
+  std::stringstream ss;
+  ss << pose_name << "_position_x,";
+  ss << pose_name << "_position_y,";
+  ss << pose_name << "_position_z,";
+  ss << pose_name << "_orientation_roll,";
+  ss << pose_name << "_orientation_pitch,";
+  ss << pose_name << "_orientation_yaw,";
+  return ss.str();
+}
+
 }
 

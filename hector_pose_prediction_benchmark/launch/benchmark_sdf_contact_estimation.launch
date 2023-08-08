@@ -10,8 +10,8 @@
     <param name="pose_predictor" value="sdf_contact_estimation"/>
     <param name="bag_file_path" value="$(arg bag_path)"/>
     <param name="result_folder" value="$(find hector_pose_prediction_benchmark)/data"/>
-    <param name="path_sampling_resolution" value="0.2"/>
-    <param name="wait_time" value="0.25"/>
+    <param name="path_sampling_resolution" value="0.05"/>
+    <param name="wait_time" value="0.0"/>
 
     <!-- load map -->
     <rosparam subst_value="true" ns="sdf_contact_estimation/sdf_map">
