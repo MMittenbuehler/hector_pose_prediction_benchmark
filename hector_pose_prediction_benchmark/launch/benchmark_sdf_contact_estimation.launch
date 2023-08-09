@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="bag_path" />
+  <arg name="map_path" />
+  <arg name="rviz" default="true"/>
+  <arg name="robot_description" default="$(find xacro)/xacro $(find asterix_description)/urdf/asterix_ugv.urdf.xacro"/>
 
   <!-- Load robot description -->
-  <param name="robot_description" command="$(find xacro)/xacro $(find asterix_description)/urdf/asterix_ugv.urdf.xacro" />
+  <param name="robot_description" command="$(arg robot_description)" />
   <param name="robot_description_semantic" textfile="$(find asterix_moveit_config)/config/asterix_ugv.srdf" />
 
   <node pkg="hector_pose_prediction_benchmark" type="benchmark_node" name="pose_prediction_benchmark" output="screen" clear_params="true" ><!--launch-prefix="gdb -args"-->
@@ -18,7 +21,8 @@
 <!--       scenario: step_0.18 -->
       voxel_size: 0.05
       use_esdf: true
-      sdf_file_path: $(find sdf_contact_estimation)/sdf/gazebo_oc_pallet_terrain2.esdf
+      <!--sdf_file_path: $(find sdf_contact_estimation)/sdf/gazebo_oc_pallet_terrain2.esdf-->
+      sdf_file_path: $(arg map_path)
       truncation_distance: 0.4
     </rosparam>
 
