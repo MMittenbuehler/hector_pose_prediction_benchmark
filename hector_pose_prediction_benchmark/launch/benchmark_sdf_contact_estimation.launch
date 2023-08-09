@@ -30,6 +30,6 @@
   </node>
 
   <!-- rviz ui -->
-<!--   <include if="$(arg rviz)" file="$(find whole_body_posture_optimization)/launch/rviz.launch"/> -->
+  <include if="$(arg rviz)" file="$(find hector_pose_prediction_benchmark)/launch/rviz.launch"/>
 
 </launch>
