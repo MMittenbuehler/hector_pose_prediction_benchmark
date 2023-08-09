@@ -101,6 +101,11 @@ bool PosePredictionBenchmark::saveToCsv(const std::string& csv_file_path) const
   if (!createParentDirectory(csv_file_path)) {
     return false;
   }
+  if (data_.empty()) {
+    return true;
+  }
+
+  ros::Time start_time = data_.front().time;
 
   std::ofstream file;
   file.open(csv_file_path);
@@ -113,7 +118,8 @@ bool PosePredictionBenchmark::saveToCsv(const std::string& csv_file_path) const
        << "predicted_stability"
        << std::endl;
   for (const auto& data_point: data_) {
-    file << data_point.time.toSec() << ", ";
+    ros::Duration duration_since_start = data_point.time - start_time;
+    file << duration_since_start.toSec() << ", ";
     file << poseToText(data_point.gt_pose) << ", ";
     file << poseToText(data_point.input_pose) << ", ";
     file << data_point.estimated_stability << ", ";
