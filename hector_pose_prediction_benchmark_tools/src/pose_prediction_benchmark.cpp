@@ -39,6 +39,9 @@ void PosePredictionBenchmark::evaluate(const nav_msgs::Path& path, const std::ve
   hector_math::Pose<double> previous_predicted_pose;
   visualization_msgs::MarkerArray marker_array;
   for (unsigned int i = 0; i < path.poses.size(); ++i) {
+    if (!ros::ok()) {
+      return;
+    }
     const geometry_msgs::PoseStamped& pose_msg = path.poses[i];
     const JointPositionMap& joint_position = joint_positions[i];
     pose_predictor_->robotModel()->updateJointPositions(joint_position);
