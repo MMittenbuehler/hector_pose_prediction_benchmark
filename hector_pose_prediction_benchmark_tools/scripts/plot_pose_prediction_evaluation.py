@@ -47,6 +47,22 @@ def compute_label_metrics(data, label1, label2):
     compute_metrics(diff, angle)
     print("")
 
+def compute_position_error(data, label1_prefix, label2_prefix):
+    pose_suffixes = ["position_x", "position_y", "position_z"]
+    label1 = [label1_prefix + "_" + suffix for suffix in pose_suffixes]
+    label2 = [label2_prefix + "_" + suffix for suffix in pose_suffixes]
+
+    position_error = np.zeros(data.size)
+    for i, row in enumerate(data[label1 + label2]):
+        pos1 = np.array(row[label1].tolist())
+        pos2 = np.array(row[label2].tolist())
+        vec = pos2 - pos1
+        position_error[i] = np.linalg.norm(vec)
+
+    print(f"{label1_prefix} - {label2_prefix}: position error")
+    compute_metrics(position_error, False)
+    print("")
+
 def compute_angular_error(data, label1_prefix, label2_prefix):
     pose_suffixes = ["orientation_roll", "orientation_pitch", "orientation_yaw"]
     label1 = [label1_prefix + "_" + suffix for suffix in pose_suffixes]
@@ -68,7 +84,7 @@ def compute_metrics(data, angle=False):
     std = np.std(data)
     maximum = np.max(np.abs(data))
     if angle:
-        print(f"mean: {mean:0.4f} +/- {std}, deg: {np.rad2deg(mean):0.4f} +/- {np.rad2deg(std):0.4f}", )
+        print(f"mean: {mean:0.4f} +/- {std:0.4f}, deg: {np.rad2deg(mean):0.4f} +/- {np.rad2deg(std):0.4f}", )
         print(f"max: {maximum}, deg: {np.rad2deg(maximum)}")
     else:
         print(f"mean: {mean:0.4f} +/- {std:0.4f}")
@@ -89,12 +105,14 @@ def main():
     plot_comparison(data, position_z_comparison_labels)
     plot_comparison(data, roll_comparison_labels + pitch_comparison_labels)
 
-    compute_label_metrics(data, *stability_comparison_labels)
+    compute_position_error(data, "ground_truth", "predicted")
     compute_label_metrics(data, *position_z_comparison_labels)
+
+    compute_angular_error(data, "ground_truth", "predicted")
     compute_label_metrics(data, *roll_comparison_labels)
     compute_label_metrics(data, *pitch_comparison_labels)
 
-    compute_angular_error(data, "ground_truth", "predicted")
+    compute_label_metrics(data, *stability_comparison_labels)
 
 
 if __name__ == '__main__':
