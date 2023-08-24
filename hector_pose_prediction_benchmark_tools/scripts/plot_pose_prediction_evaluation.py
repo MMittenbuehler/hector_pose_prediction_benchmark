@@ -7,6 +7,7 @@ from pytransform3d import rotations as pr
 import plotly.io as pio
 pio.kaleido.scope.mathjax = None
 
+
 def load_data(data_path):
     if os.path.isfile(data_path):
         data = np.genfromtxt(data_path, names=True, delimiter=",")
@@ -43,7 +44,7 @@ def compute_label_metrics(data, label1, label2):
     diff = np.abs(data[label1] - data[label2])
 
     print(f"{label1} - {label2}")
-    angle = "roll" in label1 or "pitch"
+    angle = "roll" in label1 or "pitch" in label1
     compute_metrics(diff, angle)
     print("")
 
@@ -85,10 +86,10 @@ def compute_metrics(data, angle=False):
     maximum = np.max(np.abs(data))
     if angle:
         print(f"mean: {mean:0.4f} +/- {std:0.4f}, deg: {np.rad2deg(mean):0.4f} +/- {np.rad2deg(std):0.4f}", )
-        print(f"max: {maximum}, deg: {np.rad2deg(maximum)}")
+        print(f"max: {maximum:0.4f}, deg: {np.rad2deg(maximum):0.4f}")
     else:
         print(f"mean: {mean:0.4f} +/- {std:0.4f}")
-        print(f"max: {maximum:0.4f}, deg: {np.rad2deg(maximum):0.4f}")
+        print(f"max: {maximum:0.4f}")
 
 
 def main():
