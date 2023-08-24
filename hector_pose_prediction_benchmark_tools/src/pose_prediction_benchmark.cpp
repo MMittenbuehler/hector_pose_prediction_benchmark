@@ -10,6 +10,7 @@
 #include <sensor_msgs/JointState.h>
 #include <tf2_msgs/TFMessage.h>
 #include <fstream>
+#include <chrono>
 
 namespace hector_pose_prediction_benchmark_tools {
 PosePredictionBenchmark::PosePredictionBenchmark(
@@ -38,6 +39,7 @@ void PosePredictionBenchmark::evaluate(const nav_msgs::Path& path, const std::ve
   bool first_iteration = true;
   hector_math::Pose<double> previous_predicted_pose;
   visualization_msgs::MarkerArray marker_array;
+  std::chrono::duration<long, std::micro> total_execution_time(0);
   for (unsigned int i = 0; i < path.poses.size(); ++i) {
     if (!ros::ok()) {
       return;
@@ -78,8 +80,14 @@ void PosePredictionBenchmark::evaluate(const nav_msgs::Path& path, const std::ve
 
     // Pose prediction
     data_point.input_pose = pose;
+    auto start = std::chrono::high_resolution_clock::now();
     data_point.predicted_stability = pose_predictor_->predictPoseAndContactInformation(
-        pose, data_point.predicted_support_polygon, data_point.predicted_contact_information);
+        pose, data_point.predicted_support_polygon, data_point.predicted_contact_information, hector_pose_prediction_interface::ContactInformationFlags::None);
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    total_execution_time += duration;
+
     data_point.predicted_pose = pose;
     previous_predicted_pose = pose;
     first_iteration = false;
@@ -95,6 +103,9 @@ void PosePredictionBenchmark::evaluate(const nav_msgs::Path& path, const std::ve
     data_.push_back(std::move(data_point));
     ros::WallDuration(wait_time_).sleep();
   }
+  total_execution_time /= static_cast<long>(path.poses.size());
+  double execution_time_ms = static_cast<double>(total_execution_time.count()) / 1000.0;
+  ROS_INFO_STREAM("Average execution time (ms): " << execution_time_ms << " (" << path.poses.size() << " iterations)");
   fixMarkerIds(marker_array);
   all_robot_states_pub_.publish(marker_array);
 }
