@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="filter_limit_max" default="1.0"/>
+
+  <!-- Crop points by height -->
+  <node pkg="nodelet" type="nodelet" name="scan_z_filter" output="screen" respawn="true" args="standalone pcl/PassThrough" >
+        <param name="filter_field_name" value="z"/>
+        <param name="filter_limit_min" value="-1"/>
+        <param name="filter_limit_max" value="$(arg filter_limit_max)"/>
+        <param name="input_frame" value="base_stabilized"/>
+        <remap from="~input" to="/scan_cloud_filtered"/>
+        <remap from="~output" to="/scan_matched_points2_cropped"/>
+  </node>
+
+  <!-- Relay pose -->
+  <node pkg="pose_to_pose_with_covariance" type="pose_to_pose_with_covariance" name="pose_to_pose_with_covariance" output="screen" respawn="true"/>
+
+  <!-- Elevation mapping -->
+  <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen" respawn="true" clear_params="true">
+    <rosparam command="load" file="$(find hector_tracked_vehicles_launch)/config/elevation_mapping/jasmine_robot.yaml" />
+    <rosparam command="load" file="$(find hector_tracked_vehicles_launch)/config/elevation_mapping/map_range_global.yaml" />
+    <rosparam command="load" file="$(find hector_tracked_vehicles_launch)/config/sensor_processors/velodyne_VLP-16.yaml" ns="input_sources/lidar"/>
+  </node>
+
+  <node pkg="hector_3d_ugv_path_planning" type="path_planning_server_node" name="path_planning_server_node" output="screen" respawn="true">
+    <param name="map_resolution" value="0.05"/>
+    <param name="world_frame" value="world"/>
+    <param name="grid_map_layer" value="elevation"/>
+    <remap from="/elevation_map" to="/elevation_mapping/elevation_map"/>
+    <remap from="/move_base" to="/stability_planner/move_base"/>
+    <remap from="/explore" to="/stability_planner/explore"/>
+  </node>
+
+  <node pkg="vigir_worldmodel_server" type="worldmodel_server_node" name="worldmodel_main" output="screen" respawn="true">
+    <param name="aggregator_frames" value="world odom base_link " />
+    <param name="root_frame" value="world" />
+    <param name="stabilized_reference_frame_name" value="world" />
+
+    <param name="required_frames" value="base_link" />
+    <param name="publish_frames_as_poses" value="true" />
+  </node>
+</launch>
