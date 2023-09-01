@@ -114,6 +114,8 @@ def main():
     compute_label_metrics(data, *pitch_comparison_labels)
 
     compute_label_metrics(data, *stability_comparison_labels)
+    print("prediction_time [μs]")
+    compute_metrics(data["prediction_time"])
 
 
 if __name__ == '__main__':

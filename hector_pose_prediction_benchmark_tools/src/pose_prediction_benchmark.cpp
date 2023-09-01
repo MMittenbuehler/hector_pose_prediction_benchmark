@@ -84,8 +84,9 @@ void PosePredictionBenchmark::evaluate(const nav_msgs::Path& path, const std::ve
     data_point.predicted_stability = pose_predictor_->predictPoseAndContactInformation(
         pose, data_point.predicted_support_polygon, data_point.predicted_contact_information, hector_pose_prediction_interface::ContactInformationFlags::None);
     auto stop = std::chrono::high_resolution_clock::now();
-
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    data_point.prediction_time = duration.count();
+
     total_execution_time += duration;
 
     data_point.predicted_pose = pose;
@@ -129,7 +130,8 @@ bool PosePredictionBenchmark::saveToCsv(const std::string& csv_file_path) const
        << getPoseLabels("input")
        << "estimated_stability,"
        << getPoseLabels("predicted")
-       << "predicted_stability"
+       << "predicted_stability,"
+       << "prediction_time"
        << std::endl;
   for (const auto& data_point: data_) {
     ros::Duration duration_since_start = data_point.time - start_time;
@@ -138,7 +140,8 @@ bool PosePredictionBenchmark::saveToCsv(const std::string& csv_file_path) const
     file << poseToText(data_point.input_pose) << ", ";
     file << data_point.estimated_stability << ", ";
     file << poseToText(data_point.predicted_pose) << ", ";
-    file << data_point.predicted_stability << std::endl;
+    file << data_point.predicted_stability << ", ";
+    file << data_point.prediction_time << std::endl;
   }
 
   file.close();

@@ -21,6 +21,8 @@ struct DataPoint
   double predicted_stability;
   hector_pose_prediction_interface::SupportPolygon<double> predicted_support_polygon;
   hector_pose_prediction_interface::ContactInformation<double> predicted_contact_information;
+
+  long prediction_time; // μs
 };
 
 }
