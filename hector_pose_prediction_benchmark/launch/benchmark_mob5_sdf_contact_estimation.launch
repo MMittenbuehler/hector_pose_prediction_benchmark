@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <include file="$(find hector_pose_prediction_benchmark)/launch/benchmark_sdf_contact_estimation.launch">
-    <arg name="bag_path" value=""/>
-    <arg name="map_path" value=""/>
-    <arg name="robot_description" value="cat /home/martin/Documents/bagfiles/asterix/drz_living_lab_tracked_robot_dataset/mob5_elevated_ramps/asterix_ugv.urdf"/>
-  </include>
-
-</launch>

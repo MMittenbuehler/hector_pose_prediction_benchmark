@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="bag_path" />
+  <arg name="map_path" />
+  <arg name="robot_description" />
+  <arg name="rviz" default="true"/>
+  <include file="$(find hector_pose_prediction_benchmark)/launch/benchmark_sdf_contact_estimation_asterix.launch">
+    <arg name="bag_path" value="$(arg bag_path)"/>
+    <arg name="map_path" value="$(arg map_path)"/>
+    <arg name="rviz" value="$(arg rviz)"/>
+    <arg name="robot_description" value="cat $(arg robot_description)"/>
+  </include>
+
+</launch>

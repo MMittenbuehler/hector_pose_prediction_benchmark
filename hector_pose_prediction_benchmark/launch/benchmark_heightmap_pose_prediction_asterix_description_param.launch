@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="bag_path" />
+  <arg name="map_path" />
+  <arg name="robot_description" />
+  <include file="$(find hector_pose_prediction_benchmark)/launch/benchmark_heightmap_pose_prediction_asterix.launch">
+    <arg name="bag_path" value="$(arg bag_path)"/>
+    <arg name="map_path" value="$(arg map_path)"/>
+    <arg name="robot_description" value="cat $(arg robot_description)"/>
+  </include>
+
+</launch>
