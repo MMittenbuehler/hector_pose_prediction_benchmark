@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <arg name="path"/>
+
+  <arg name="voxel_size" default="0.05"/>
+  <arg name="floodfill" default="true"/>
+  <arg name="floodfill_distance" default="0.4"/>
+
+  <!-- parameters -->
+  <param name="/voxblox_ground_truth/voxel_size" value="$(arg voxel_size)"/>
+  <param name="/voxblox_ground_truth/floodfill_unoccupied" value="$(arg floodfill)"/>
+  <param name="/voxblox_ground_truth/floodfill_distance" value="$(arg floodfill_distance)"/>
+
+  <node name="save_tsdf" pkg="rosservice" type="rosservice" args="call --wait /gazebo/save_voxblox_ground_truth_to_file 'file_path: $(arg path)'"/>
+
+  <arg name="rviz" default="true"/>
+  <arg name="rviz_file" default="$(find voxblox_ground_truth)/config/debug_gazebo_plugin.rviz" />
+  <node if="$(arg rviz)" pkg="rviz" type="rviz" name="$(anon rviz)" respawn="false" args="-d $(arg rviz_file)" output="screen"/>
+</launch>
