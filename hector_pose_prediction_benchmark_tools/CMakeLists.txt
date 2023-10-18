@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   rosbag
   eigen_conversions
+  moveit_core
+  moveit_ros_planning
 )
 
 
@@ -21,7 +23,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES hector_pose_prediction_benchmark_tools
- CATKIN_DEPENDS hector_pose_prediction_interface nav_msgs hector_stability_metrics geometry_msgs tf2_msgs sensor_msgs rosbag eigen_conversions
+ CATKIN_DEPENDS hector_pose_prediction_interface nav_msgs hector_stability_metrics geometry_msgs tf2_msgs sensor_msgs rosbag eigen_conversions moveit_core moveit_ros_planning
 #  DEPENDS system_lib
 )
 
