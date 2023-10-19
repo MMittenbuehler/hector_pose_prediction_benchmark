@@ -95,9 +95,12 @@ void PosePredictionBenchmark::evaluate(const nav_msgs::Path& path, const std::ve
 
     // Marker array
     visualization_msgs::MarkerArray current_marker;
-    addRobotMarkerToArray(data_point.gt_pose, joint_position, {0.0, 1.0, 1.0, 1.0}, "ground_truth", current_marker);
-    addRobotMarkerToArray(data_point.input_pose, joint_position, {0.0, 1.0, 0.0, 1.0}, "input", current_marker);
-    addRobotMarkerToArray(data_point.predicted_pose, joint_position, {0.0, 0.0, 1.0, 1.0}, "predicted", current_marker);
+    const Eigen::Vector4f color_green(0.0, 1.0, 0.0, 0.8);
+    const Eigen::Vector4f color_yellow(1.0, 1.0, 0.0, 0.8);
+    const Eigen::Vector4f color_blue(0.0, 0.0, 1.0, 0.8);
+    addRobotMarkerToArray(data_point.gt_pose, joint_position, color_green, "ground_truth", current_marker);
+    addRobotMarkerToArray(data_point.input_pose, joint_position, color_blue, "input", current_marker);
+    addRobotMarkerToArray(data_point.predicted_pose, joint_position, color_yellow, "predicted", current_marker);
     current_robot_state_pub_.publish(current_marker);
     marker_array.markers.insert(marker_array.markers.end(), current_marker.markers.begin(), current_marker.markers.end());
 
