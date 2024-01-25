@@ -18,7 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS hector_pose_prediction_benchmark_tools roscpp sdf_contact_estimation hector_heightmap_pose_prediction hector_world_heightmap
+  CATKIN_DEPENDS hector_pose_prediction_benchmark_tools roscpp sdf_contact_estimation hector_heightmap_pose_prediction gpu_heightmap_pose_prediction hector_world_heightmap
 #  DEPENDS system_lib
 )
 

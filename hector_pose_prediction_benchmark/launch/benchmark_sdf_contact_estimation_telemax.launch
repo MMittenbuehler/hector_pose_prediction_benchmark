@@ -33,7 +33,4 @@
     <rosparam file="$(find sdf_contact_estimation)/config/optimization.yaml" command="load" ns="sdf_contact_estimation"/>
   </node>
 
-  <!-- rviz ui -->
-  <include if="$(arg rviz)" file="$(find hector_pose_prediction_benchmark)/launch/rviz.launch"/>
-
 </launch>

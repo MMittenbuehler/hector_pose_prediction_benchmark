@@ -10,27 +10,14 @@
   <param name="robot_description_semantic" textfile="$(find asterix_moveit_config)/config/asterix_ugv.srdf" />
 
   <node pkg="hector_pose_prediction_benchmark" type="benchmark_node" name="pose_prediction_benchmark" output="screen" clear_params="true" ><!--launch-prefix="gdb -args"-->
-    <param name="pose_predictor" value="sdf_contact_estimation"/>
+    <param name="pose_predictor" value="gpu_heightmap_pose_prediction"/>
     <param name="bag_file_path" value="$(arg bag_path)"/>
     <param name="result_folder" value="$(find hector_pose_prediction_benchmark)/data"/>
     <param name="path_sampling_resolution" value="0.05"/>
     <param name="wait_time" value="0.0"/>
 
-    <!-- load map -->
-    <rosparam subst_value="true" ns="sdf_contact_estimation/sdf_map">
-<!--       scenario: step_0.18 -->
-      voxel_size: 0.05
-      use_esdf: true
-      <!--sdf_file_path: $(find sdf_contact_estimation)/sdf/gazebo_oc_pallet_terrain2.esdf-->
-      sdf_file_path: $(arg map_path)
-      truncation_distance: 0.4
+    <rosparam subst_value="true" ns="hector_heightmap_pose_prediction/heightmap">
+      map_bag_file_path: $(arg map_path)
     </rosparam>
-
-    <!-- load robot model -->
-    <rosparam file="$(find sdf_contact_estimation)/config/asterix_shape_config.yaml" command="load" ns="sdf_contact_estimation/shape_model" />
-
-    <!-- load pose predictor -->
-    <rosparam file="$(find sdf_contact_estimation)/config/optimization.yaml" command="load" ns="sdf_contact_estimation"/>
   </node>
-
 </launch>

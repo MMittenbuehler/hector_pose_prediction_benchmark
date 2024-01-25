@@ -20,7 +20,4 @@
       map_bag_file_path: $(arg map_path)
     </rosparam>
   </node>
-
-  <!-- rviz ui -->
-  <include if="$(arg rviz)" file="$(find hector_pose_prediction_benchmark)/launch/rviz.launch"/>
 </launch>
