@@ -16,6 +16,7 @@
   <depend>roscpp</depend>
   <depend>sdf_contact_estimation</depend>
   <depend>hector_heightmap_pose_prediction</depend>
+  <depend>gpu_heightmap_pose_prediction</depend>
   <depend>hector_world_heightmap</depend>
 
   <export>

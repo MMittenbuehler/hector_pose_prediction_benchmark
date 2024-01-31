@@ -16,7 +16,7 @@
     <param name="path_sampling_resolution" value="0.05"/>
     <param name="wait_time" value="0.0"/>
 
-    <rosparam subst_value="true" ns="hector_heightmap_pose_prediction/heightmap">
+    <rosparam subst_value="true" ns="gpu_heightmap_pose_prediction/heightmap">
       map_bag_file_path: $(arg map_path)
     </rosparam>
   </node>

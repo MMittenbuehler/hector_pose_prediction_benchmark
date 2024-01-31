@@ -9,8 +9,10 @@ find_package(catkin REQUIRED COMPONENTS
   sdf_contact_estimation
   hector_heightmap_pose_prediction
   hector_world_heightmap
+  gpu_heightmap_pose_prediction
 )
 
+link_directories(${CATKIN_DEVEL_PREFIX}/lib})
 
 ###################################
 ## catkin specific configuration ##
